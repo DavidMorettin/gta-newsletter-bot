@@ -1,27 +1,20 @@
-name: Newsletter Bot          # ← a short, human‑readable title
+name: GTA Launch Digest
 
-on:                            # ← the events that trigger the workflow
+on:
   schedule:
-    - cron: '0 13 * * FRI'     # every Friday at 9 AM Toronto (13:00 UTC)
-  workflow_dispatch:           # allow manual runs from the Actions tab
+    - cron: '0 13 * * FRI'    # Fridays at 9 AM Toronto
+  workflow_dispatch:        # allows manual runs
 
 jobs:
-  build-and-send:
+  send-digest:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Check out repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install deps
-        run: pip install -r requirements.txt
+      - run: pip install feedparser python-dotenv
 
-      - name: Run newsletter bot
-        env:
-          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-        run: python newsletter_bot.py
+      - run: python newsletter_bot.py
